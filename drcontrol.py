@@ -121,12 +121,13 @@ def get_relay_state( data, relay ):
 # ----------------------------------------------------------------------------
 
 def list_devices():
-    print "Vendor\t\tProduct\t\t\tSerial"
+    print("Vendor\t\tProduct\t\t\tSerial")
     dev_list = []
     for device in Driver().list_devices():
         device = map(lambda x: x.decode('latin1'), device)
         vendor, product, serial = device
-        print "%s\t\t%s\t\t%s" % (vendor, product, serial)
+        #print "%s\t\t%s\t\t%s" % (vendor, product, serial)
+        print(vendor, "\t" , product, "\t", serial)
 
 # ----------------------------------------------------------------------------
 # SET_RELAY()
@@ -137,8 +138,8 @@ def list_devices():
 def set_relay():
 
     if cmdarg.verbose:
-        print "Device:\t\t" + cmdarg.device
-        print "Send command:\tRelay " + cmdarg.relay + " (0x" + relay.address[cmdarg.relay] + ") to " + cmdarg.command.upper()
+        print("Device:\t\t", cmdarg.device)
+        print("Send command:\tRelay " , cmdarg.relay , " (0x" , relay.address[cmdarg.relay] , ") to " , cmdarg.command.upper())
 
     try:
         with BitBangDevice(cmdarg.device) as bb:
@@ -151,13 +152,13 @@ def set_relay():
                     # Turn relay ON
                     if cmdarg.command == "on":
                         if cmdarg.verbose:
-                            print "Relay " + str(cmdarg.relay) + " to ON"
+                            print("Relay " , str(cmdarg.relay) , " to ON")
                         bb.port |= int(relay.address[cmdarg.relay], 16)
 
                     # Turn relay OFF
                     elif cmdarg.command == "off":
                         if cmdarg.verbose:
-                            print "Relay "  + str(cmdarg.relay) + " to OFF"
+                            print("Relay "  , str(cmdarg.relay) , " to OFF")
                         bb.port &= ~int(relay.address[cmdarg.relay], 16)
 
                     # Print relay status
@@ -165,26 +166,26 @@ def set_relay():
                         state = get_relay_state( bb.port, cmdarg.relay )
                         if state == 0:
                             if cmdarg.verbose:
-                                print "Relay " + cmdarg.relay + " state:\tOFF (" + str(state) + ")"
+                                print("Relay " , cmdarg.relay , " state:\tOFF (" , str(state) , ")")
                             else:
-                                print "OFF"
+                                print("OFF")
                         else:
                             if cmdarg.verbose:
-                                print "Relay " + cmdarg.relay + " state:\tON (" + str(state) + ")"
+                                print("Relay " , cmdarg.relay , " state:\tON (" , str(state) , ")")
                             else:
-                                print "ON"
+                                print("ON")
 
             # Action towards all relays
             elif cmdarg.relay == "all":
 
                 if cmdarg.command == "on":
                     if cmdarg.verbose:
-                        print "Relay " + str(cmdarg.relay) + " to ON"
+                        print("Relay " , str(cmdarg.relay) , " to ON")
                     bb.port |= int(relay.address[cmdarg.relay], 16)
 
                 elif cmdarg.command == "off":
                     if cmdarg.verbose:
-                        print "Relay "  + str(cmdarg.relay) + " to OFF"
+                        print("Relay "  , str(cmdarg.relay) , " to OFF")
                     bb.port &= ~int(relay.address[cmdarg.relay], 16)
 
                 elif cmdarg.command == "state":
@@ -192,38 +193,38 @@ def set_relay():
                         state = get_relay_state( bb.port, str(i) )
                         if state == 0:
                             if cmdarg.verbose:
-                                print "Relay " + str(i) + " state:\tOFF (" + str(state) + ")"
+                                print("Relay " , str(i) , " state:\tOFF (" , str(state) , ")")
                             else:
-                                print "OFF"
+                                print("OFF")
                         else:
                             if cmdarg.verbose:
-                                print "Relay " + str(i) + " state:\tON (" + str(state) + ")"
+                                print("Relay " , str(i) , " state:\tON (" , str(state) , ")")
                             else:
-                                print "ON"
+                                print("ON")
 
                 else:
-                    print "Error: Unknown command"
+                    print("Error: Unknown command")
 
             else:
-                print "Error: Unknown relay number"
+                print("Error: Unknown relay number")
                 sys.exit(1)
 
-    except Exception, err:
-        print "Error: " + str(err)
+    except Exception as err:
+        print("Error: " , str(err))
         sys.exit(1)
 
 def check():
 
     # Check python version
-    if sys.hexversion < 0x02060000:
-        print "Error: Your Python need to be 2.6 or newer"
+    if sys.hexversion < 0x03040000:
+        print("Error: Your Python need to be 3.4 or newer")
         sys.exit(1)
 
-    # Check availability on library, this check is also done in pylibftdi
-    ftdi_lib = find_library('ftdi')
+    #Check availability on library, this check is also done in pylibftdi
+    ftdi_lib = find_library('libftdi1')
     if ftdi_lib is None:
-        print "Error: The pylibftdi library not found"
-        sys.exit(1)
+       print("Error: libftdi library not found")
+       sys.exit(1)
 
 if __name__ == '__main__':
 
@@ -246,7 +247,7 @@ if __name__ == '__main__':
 
     if options.verbose:
         cmdarg.verbose = options.verbose
-        print app.name + " " + app.version
+        print(app.name , " " , app.version)
     else:
         cmdarg.verbose = False
 
@@ -256,14 +257,14 @@ if __name__ == '__main__':
 
     if options.relay or options.command:
         if not options.device:
-            print "Error: Device missing"
+            print("Error: Device missing")
 
     if options.device:
         if not options.relay:
-            print "Error: Need to state which relay"
+            print("Error: Need to state which relay")
             sys.exit(1)
         if not options.command:
-            print "Error: Need to specify which relay state"
+            print("Error: Need to specify which relay state")
             sys.exit(1)
 
         cmdarg.device = options.device
