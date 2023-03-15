@@ -124,7 +124,7 @@ def list_devices():
     print("Vendor\t\tProduct\t\t\tSerial")
     dev_list = []
     for device in Driver().list_devices():
-        device = map(lambda x: x.decode('latin1'), device)
+        device = map(lambda x: x.decode('latin1') if not isinstance(x, str) else x, device)
         vendor, product, serial = device
         #print "%s\t\t%s\t\t%s" % (vendor, product, serial)
         print(vendor, "\t" , product, "\t", serial)
