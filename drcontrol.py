@@ -220,12 +220,6 @@ def check():
         print("Error: Your Python need to be 3.4 or newer")
         sys.exit(1)
 
-    #Check availability on library, this check is also done in pylibftdi
-    ftdi_lib = find_library('libftdi1')
-    if ftdi_lib is None:
-       print("Error: libftdi library not found")
-       sys.exit(1)
-
 if __name__ == '__main__':
 
     # Init objects
