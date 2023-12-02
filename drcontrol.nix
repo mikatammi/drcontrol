@@ -8,4 +8,7 @@ python3Packages.buildPythonApplication {
   version = "0.13";
   propagatedBuildInputs = [python3Packages.pylibftdi];
   src = ./.;
+  postFixup = ''
+    mv $out/bin/drcontrol.py $out/bin/drcontrol
+  '';
 }
